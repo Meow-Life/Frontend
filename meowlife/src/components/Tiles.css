@@ -1,0 +1,15 @@
+.tile{
+    display: grid;
+    place-content: center;
+    width: 90px; 
+    height: 90px;
+}
+
+.pink-tile{
+ background-color: #ffc0cb;
+}
+
+.blue-tile{
+    background-color: #72bce1;
+}
+

@@ -1,0 +1,8 @@
+#board{
+    width: 800px;
+    height: 800px;
+    display: grid;
+    grid-template-columns: repeat(8, 90px);
+    grid-template-rows: repeat(8, 90px);
+    padding-top: 90px;
+}

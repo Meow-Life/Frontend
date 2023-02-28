@@ -1,6 +1,11 @@
-import './Tiles.css'
+import './Tiles.css';
+import AppContext from '../Context/Context';
+import { useContext } from 'react';
 
-export default function Tiles({ image, catHearts, updateHearts, userPoints, updatePoints, hungerLvl, updateHunger, thirstLvl, updateThirst, number, x, y }){
+
+export default function Tiles({ image, number, x, y }){
+
+    const {hungerLvl, updateHunger, thirstLvl, updateThirst, catHearts, updateHearts, userPoints, updatePoints} = useContext(AppContext);
 
     const handleSpriteClick = (e) => {
         // verifying the sprite clicked + hunger lvl is above 50

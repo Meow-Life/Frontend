@@ -1,10 +1,11 @@
-import { useState } from 'react'
-import 'Timer.css'
+import { useState, useEffect } from 'react'
+import './Timer.css'
+
 
 export default function Timer(){
-    const [ timer, setTimer ] = useState(30)
-
     return(
-        <h1>:{timer}</h1>
+       <div>
+        <h1>Hello World</h1>
+       </div>
     )
 }

@@ -1,6 +1,7 @@
 import './Board.css'
 import Tiles from './Tiles'
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import AppContext from '../Context/Context';
 
 // creating the board using h + v axis
 const horizontalAxis = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
@@ -22,10 +23,7 @@ export default function Board(){
     // arr to store tiles of board
     let board = [];
     // state variables to track levels
-    let [catHearts, updateHearts] = useState(3);
-    let [userPoints, updatePoints] = useState(200);
-    let [hungerLvl, updateHunger] = useState(0);
-    let [thirstLvl, updateThirst] = useState(0);
+    const {hungerLvl, updateHunger, thirstLvl, updateThirst, catHearts, updateHearts, userPoints, updatePoints} = useContext(AppContext);
 
     // on mount of the app, i want the levels to be dynamically + randomly updated to mimic real-life hunger or thirst etc
     useEffect(() => {
@@ -57,10 +55,10 @@ export default function Board(){
             }
         })
        // rendering tiles based on their positioning (i.e. blue v pink) & passing in necessary props
-            board.push(<Tiles image={image} hungerLvl={hungerLvl} updateHunger={updateHunger} thirstLvl={thirstLvl} updateThirst={updateThirst} userPoints={userPoints} updatePoints={updatePoints} catHearts={catHearts} updateHearts={updateHearts} number={number} x={x} y={y}/>)
+            board.push(<Tiles image={image} number={number} x={x} y={y}/>)
    }
   }
-  console.log('h:',hungerLvl, 't:', thirstLvl)
+  console.log('Board.js', 'h:',hungerLvl, 't:', thirstLvl)
     return (
         <div id="board">
             {board}

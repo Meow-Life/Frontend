@@ -3,7 +3,7 @@ import AppContext from './Context';
 
 const ContextProvider = ({ children }) => {
 
-  const [name, setName] = useState('')
+  const [name, setName] = useState("")
   const [email, setEmail] = useState('')
   const [pswd, setPswd] = useState('')
   const [catName, setCatName] = useState('')
@@ -13,7 +13,7 @@ const ContextProvider = ({ children }) => {
   const [userPoints, updatePoints] = useState(200);
 
 
-  const context = {
+  const data = {
     name, 
     setName,
     email, 
@@ -33,7 +33,7 @@ const ContextProvider = ({ children }) => {
   };
 
   return (
-    <AppContext.Provider value={context}> 
+    <AppContext.Provider value={ data }> 
       {children}
     </AppContext.Provider>
   );

@@ -1,15 +1,10 @@
-* {    
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-  
   .board {
     display: flex;
     flex-wrap: wrap;
     width: 100vw;
     height: 80vh;
     margin: 0 0;
-    
+    padding-top: 9px;
     justify-content: center;
     align-items: center;
     position: relative;

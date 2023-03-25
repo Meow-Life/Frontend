@@ -1,2 +1,45 @@
+*{
+    background-image: linear-gradient(79deg, #fcfced, #fcedfc 48%, #ebf6ff);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 200;
+}
+
+.register-form, .login-form{
+    display: flex;
+    flex-flow: column wrap;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem;
+}
 
 
+label{ 
+    text-align: left;
+    padding: 0.35rem 0;
+    background: none;
+}
+
+input{
+    margin: 0.5rem 0;
+    padding: .35rem;
+    border-radius: 10px;
+    background-color: white;
+}
+
+button{
+    border: none;
+    background-color: white;
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    background: none;
+}
+.submit-buttons{
+    font-size: 15px;
+}
+.login-link, .signup-link{
+    background: none;
+    color: black;
+    text-decoration: underline;
+    cursor: pointer;
+}

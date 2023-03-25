@@ -1,0 +1,17 @@
+.instruc-container{
+    background: none;
+    display: flex;
+    align-items: center;
+    flex-flow: column wrap;
+    padding: 5rem;
+}
+.p-container{
+    border: 1px white solid;
+    padding: 1rem;
+}
+
+#instr-div{
+    width: 45%;
+    margin-right: auto;
+    margin-left: auto
+}

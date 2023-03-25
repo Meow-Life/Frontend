@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import AppContext from './Context';
 
 const ContextProvider = ({ children }) => {
-
+  const [timer, setTimer] = useState(20)
   const [name, setName] = useState("")
   const [email, setEmail] = useState('')
   const [pswd, setPswd] = useState('')
@@ -29,7 +29,9 @@ const ContextProvider = ({ children }) => {
     catHearts,
     updateHearts,
     userPoints, 
-    updatePoints
+    updatePoints,
+    timer, 
+    setTimer
   };
 
   return (

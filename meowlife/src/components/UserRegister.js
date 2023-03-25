@@ -1,19 +1,27 @@
 import { useContext } from "react"
+import { useNavigate } from "react-router-dom"
 import AppContext from "../Context/Context.js"
-
+import './UserRegister.css'
 
 export default function Register(){
     const {name, setName, email, setEmail, pswd, setPswd, catName, setCatName}  = useContext(AppContext)
+    const navigate = useNavigate();
 
     function handleSubmit(e){
-        console.log('submitted form', e.target.name)
+        console.log('submitted form', name)
         e.preventDefault();
+        navigate('/login')
     }
 
-    console.log(name, email, pswd, )
+    const handleRedirection = () => {
+        navigate('/login')
+    }
+
     return(
         <div id='register-user'>
-            <form id='registering-form' onSubmit={handleSubmit}>
+            <form id='registering-form' onSubmit={handleSubmit} className='register-form'>
+               
+                <h2 style={{background: 'none', paddingBottom: '15px'}}>Sign-Up Below</h2>
 
                 <label>Enter your name</label>
                 <input type='text' required value={name}  onChange={(e) => setName(e.target.value)}></input>
@@ -27,7 +35,8 @@ export default function Register(){
                 <label>What is your cat's name?</label>
                 <input type='text' required value={catName} onChange={(e) => setCatName(e.target.value)}></input>
 
-                <button type="submit">Sign Meow Up</button>
+                <button type="submit" className="submit-buttons">Sign Meow Up</button>
+                <button className="login-link" onClick={handleRedirection}>Already have an account? Login here.</button>
             </form>
         </div>
     )

@@ -1,5 +1,30 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import './Mainboard.css';
+import Timer from './Timer';
+import styled from '@emotion/styled'
+import AppContext from '../Context/Context.js'
+
+
+const Board = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  width: 100vw;
+  height: 80vh;
+  margin: 0 0;
+  padding-top: 9px;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+`
+const Tile = styled.div`
+    width: 12vh;
+    height: 12vh;
+    box-sizing: border-box;
+    border: 1px solid #bfbfbf;
+    align-items: center;
+    justify-content: center;
+`
+
 
 
 function Mainboard() {
@@ -12,54 +37,49 @@ function Mainboard() {
   const [thirstTimer, setThirstTimer] = useState(0)
   const [playTime, setPlayTime] = useState(true)
   const [blinkSequence, setBlinkSequence] = useState([])
-  const [timer, setTimer] = useState(30)
   const [catSeq, setCatSeq] = useState([])
-    
-  // timer component 
-  // disbaling the cat mvmnt until round is done
-  // when round is done display the sequence to show user the correct seq ==> time run out, they lost or they won
+  const [atBlueSprite, setAtBlueSprite] = useState(false)
+  const [atRedSprite, setAtRedSprite] = useState(false)
+  const [roundBegun, setRoundBegun] = useState(false)
+  const {timer, setTimer} = useContext(AppContext)
+  const [reloadGame, setReload] = useState(false)
+   // when round is done display the sequence to show user the correct seq ==> time run out, they lost or they won
 
   // useEffect that updates thirstLvl 
   useEffect(() => {
     const interval = setInterval(() => {
       if (blinkSequence.length < 5) {
         let sequence = Math.floor(Math.random() * 10)
-        // console.log(sequence, 'here')
-        // console.log(thirstTimer)
         setThirstTimer(thirstTimer + 1)
         if(sequence % 2 !== 0){
             // odd means blue sprite is blinking so we push in its coordinates
          blinkSequence.push([0, 6])
         } else {
-        //  setBlinkSequence(blinkSequence)
             // even means red sprite is blinking so we push in its coordinates
          blinkSequence.push([6, 0])
         }
-        // console.log(blinkSequence)
         // calling the function that will handle the sprite blinking on the ui lvl
         handleChange(sequence)
+      } else {
+        setRoundBegun(true);
       }
-    }, 5000)
+    }, 3000)
     return () => clearInterval(interval)
   }, [thirstLvl]);
  
-  console.log(blinkSequence)
 
   const handleChange = (sequence) => {
-    // console.log(blinkSequence)
     // odd hides the blue sprite and vice versa for red sprite 
     if (sequence % 2 === 0) {
       setPlayTime(false)
       setTimeout(() => {
         setPlayTime(true)
       }, 1000)
-    //   console.log('not thirsty', thirstActivated, 'wants to play', playTime)
     } else {
       setThirstActivated(false)
       setTimeout(() => {
         setThirstActivated(true)
       }, 1000)
-    //   console.log('thirsty', thirstActivated)
     }
   }
   // event handler for checking which tile/square was clicked
@@ -67,73 +87,112 @@ function Mainboard() {
     console.log(`Square (${i}, ${j}) was clicked.`);
   };
 
-  
-//   console.log('thirst:', thirstLvl)
+  useEffect(() => {
+    console.log('fetch call of catPos:', catPos);
+  }, [catPos]);
+
+  const handleAtBlueSprite = (catPos) => {
+    setCatSeq([...catSeq, catPos])
+    console.log('blue captured:', catSeq)
+  }
+
+  const handleAtRedSprite = (catPos) => {
+    setCatSeq([...catSeq, catPos])
+    console.log('red captured:', catSeq)
+  }
+
   // in the event a user clicks a key an event handler handles such action by...
   const handleKeyDown = (event) => {
-    // setting the cat position to the prevPos var which is an arr that holds the curr state value of [3,3]
-    setCatPos(prevPos => {
-      let newPos = [...prevPos];
-      // using switch case to determine which key was clicked then mathematical operation is done to determine where on the map sprite should move
-      switch (event.key) {
-        // in the event of arrowup, the new position of x or i will be tht number - 1 bc as u move up the board, the y decrements in value, the rlshp b/n the num and how up u go is an inverse one
-        case 'ArrowUp':
-          newPos[0] = Math.max(newPos[0] - 1, 0);
-        //   console.log(newPos)
-          break;
-        // if the user moved right, the x value would increment by 1 because the horizontal axis starts at 0 + goes up to 6
-        case 'ArrowRight':
-          newPos[1] = Math.min(newPos[1] + 1, 6);
-        //   console.log(newPos, newPos[1])
-          break;
-        // if it's down then the x position would add one 
-        case 'ArrowDown':
-          newPos[0] = Math.min(newPos[0] + 1, 6);
-        //   console.log(newPos)
-          break;
-        case 'ArrowLeft':
-          newPos[1] = Math.max(newPos[1] - 1, 0);
-        //   console.log(newPos)
-          break;
-        default:
-          break;
-      }
-       console.log('catPos:', catPos)
+    if(roundBegun === false && timer === 30) {
+      alert("The round has not yet begun, wait until the images stop blinking.")
+    }
+    if(blinkSequence.length === 5 && timer !== 0){
+      // setting the cat position to the prevPos var which is an arr that holds the curr state value of [3,3]
+      setCatPos(prevPos => {
+        let newPos = [...prevPos];
+        // using switch case to determine which key was clicked then mathematical operation is done to determine where on the map sprite should move
+        switch (event.key) {
+          // in the event of arrowup, the new position of x or i will be tht number - 1 bc as u move up the board, the y decrements in value, the rlshp b/n the num and how up u go is an inverse one
+          case 'ArrowUp':
+            newPos[0] = Math.max(newPos[0] - 1, 0);
+          //   console.log(newPos)
+            break;
+          // if the user moved right, the x value would increment by 1 because the horizontal axis starts at 0 + goes up to 6
+          case 'ArrowRight':
+            newPos[1] = Math.min(newPos[1] + 1, 6);
+          //   console.log(newPos, newPos[1])
+            break;
+          // if it's down then the x position would add one 
+          case 'ArrowDown':
+            newPos[0] = Math.min(newPos[0] + 1, 6);
+          //   console.log(newPos)
+            break;
+          case 'ArrowLeft':
+            newPos[1] = Math.max(newPos[1] - 1, 0);
+          //   console.log(newPos)
+            break;
+          default:
+            break;
+        }
+        return newPos;
+      });
+  } 
+  handleCatMvmnt()
+};
+
+const verifySuccessOfUser = () => {
+  // compare blinkSeq to catSeq
+  console.log('out')
+  let capturingUserAccuracy = []
+  for(let i = 0; i < blinkSequence.length; i++){
+    if(blinkSequence[i] !== catSeq[i]){
+      setPoints(points => points - 50);
+      console.log('inside')
+      capturingUserAccuracy.push(false)
+    } else {
+      setPoints(points => points + 100)
+      capturingUserAccuracy.push(true)
+    }
+  }
+  let bool = capturingUserAccuracy.find(element => element === false)
+  if(bool){
+    console.log('falseyyy')
+    alert('You failed to complete the tasks 100% correctly. Try again!')
+    console.log('reached')
+  } else{
+   alert('You succesfully completed the task!')
+   setReload(true)  
+  }
+
+  console.log(capturingUserAccuracy, points, blinkSequence, catSeq)
+}
+
+  function handleCatMvmnt() {  
+    if(timer !== 0 || !atRedSprite || !atBlueSprite){
       if(catPos[0] === 0 && catPos[1] === 6){
-        setCatSeq([...catSeq, catPos])
-        console.log('Trying to add to array', catSeq)
-        console.log('blue')
+        setAtBlueSprite(true)
+        handleAtBlueSprite(catPos);
       }
       if(catPos[0] === 6 && catPos[1] === 0){
-        setCatSeq([...catSeq, catPos])
-        console.log('Trying to add to arr', catSeq)
-        console.log('red')
+        setAtRedSprite(true)
+        handleAtRedSprite(catPos);
       }
-      handleCatMvmnt()
-      return newPos;
-    });
-  };
-
-  function handleCatMvmnt() {
-    if(timer > 0 && blinkSequence.length === 5){
-        // only track the coordinates if its the coordinates of the sprites
-        // compare the coordinates of blinkSeq and catSeq to see if they did it right
-        // resetting the round: resetting the catPos, timer, blinkSeq, catSeq
-
-           
+    } else {
+      setRoundBegun(false)
+      alert('Game over!')
+      verifySuccessOfUser()
     }
-    // theres a delay in capturing catPos + checking it against the condn'ls
-    // also there's no way to verify if it was done under 30 seconds yet (i.e. no penalty reward)
-    // if (catPos[0] === 0 && catPos[1] === 6) {
-    // //   console.log('cat is drinking water')
-    //   setPoints(points + 100);
-    // //   console.log(points)
-    // }
-    // if (catPos[0] === 6 && catPos[1] === 0) {
-    //   console.log('cat is scratching')
-    //   setPoints(points + 100);
-    // //   console.log(points)
-    // }
+    //     // resetting the round: resetting the catPos, timer, blinkSeq, catSeq
+
+  }
+
+  const resetGame = () => {
+    setThirstLvl(0)
+    setBlinkSequence([])
+    setCatSeq([])
+    setRoundBegun(false)
+    setAtBlueSprite(false)
+    setAtRedSprite(false)
   }
 
   function createBoard() {
@@ -158,13 +217,10 @@ function Mainboard() {
         // cat can only have center positioning otherwise all the other tiles if they are not the waterbowl or scratchpad are null
         const cat = center ? <div className="cat" onKeyDown={handleKeyDown} /> : null;
 
-        //     <div>
-        //   {stateVariable ? <div id="divCheckbox">:  <div id="divCheckbox" style="display: none;">)}
-        // </div>
 
         // pushing into the row a div for each tile
         row.push(
-          <div
+          <Tile
             // each tile is given a unique indentifier of it's [x,y] pos
             key={squareKey}
             // either its a dark or a light tile
@@ -174,10 +230,9 @@ function Mainboard() {
           // either null value or the sprite pos passed in
           >
             {waterBowl}
-            {[i,j]}
             {scratchPad}
             {cat}
-          </div>
+          </Tile>
         );
       }
       // the board will have a unique key of its i pos and the row arr
@@ -186,11 +241,13 @@ function Mainboard() {
     return board;
   }
 
-  return (
-    <div className="board" onKeyDown={handleKeyDown} tabIndex="0">
-      {createBoard()}
-    </div>
-  );
+   return (
+      <Board onKeyDown={handleKeyDown} tabIndex="0">
+        {'Points:'} {points}
+        {createBoard()}
+        {roundBegun ? <Timer/>: null}
+      </Board>
+    );
  }
 
 
